@@ -1,0 +1,17 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtualenv
+mvp_env/
+
+# Data / downloads / raw rasters
+data/
+outputs/
+
+# OS cruft
+.DS_Store
+
+# Logs
+*.log
+

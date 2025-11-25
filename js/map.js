@@ -319,6 +319,15 @@ const PRESET_TILES =
 const presetLayers = [];
 const presetRects = [];
 
+// WRS grid (clipped to Quebec) — expects GeoJSON at this path
+const WRS_GRID_URL = 'assets/QcGridGJ.geojson';
+const wrsGridGroup = L.layerGroup();       // togglable layer for the grid
+const wrsSelection = L.geoJSON(null, {     // highlight of the chosen tile
+  style: { color: '#00c2ff', weight: 2, fillOpacity: 0 }
+}).addTo(wrsGridGroup);
+let wrsFeatures = [];
+let lastFeatureClick = 0;
+
 let boundsUnion = null;
 
 function extendBounds(union, b) {
@@ -362,7 +371,9 @@ const baseLayers = {
   'Carto Light': carto
 };
 
-const overlayLayers = {};
+const overlayLayers = {
+  'WRS grid (click to select path/row)': wrsGridGroup
+};
 presetLayers.forEach(({ tile, layer }) => {
   overlayLayers[tile.label] = layer;
 });
@@ -422,6 +433,101 @@ function highlightRect(rect) {
   rect.setStyle({ weight: 3, color: '#ffffff' });
   lastHighlighted = rect;
 }
+
+// --- WRS grid loading + selection ---
+
+function propsPath(f) {
+  const p = f && f.properties ? f.properties : {};
+  return p.PATH || p.path || p.Path || p.wrs_path || p.WRS_PATH || null;
+}
+
+function propsRow(f) {
+  const p = f && f.properties ? f.properties : {};
+  return p.ROW || p.row || p.Row || p.wrs_row || p.WRS_ROW || null;
+}
+
+function baseWrsStyle() {
+  return { color: '#ffd166', weight: 0.6, fillOpacity: 0, opacity: 0.7 };
+}
+
+fetch(WRS_GRID_URL)
+  .then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  })
+  .then(data => {
+    wrsFeatures = (data && data.features) || [];
+    L.geoJSON(data, {
+      style: baseWrsStyle,
+      onEachFeature: (feature, layer) => {
+        layer.on('mouseover', () => {
+          layer.setStyle({ color: '#ffffff', weight: 2, fillOpacity: 0, opacity: 1 });
+          if (layer.bringToFront) layer.bringToFront();
+        });
+        layer.on('mouseout', () => {
+          layer.setStyle(baseWrsStyle());
+        });
+        layer.on('click', (e) => {
+          lastFeatureClick = Date.now();
+          chooseFeature(feature);
+          if (L.DomEvent && L.DomEvent.stopPropagation) {
+            L.DomEvent.stopPropagation(e);
+          }
+        });
+      }
+    }).addTo(wrsGridGroup);
+    console.log(`Loaded WRS grid with ${wrsFeatures.length} features`);
+  })
+  .catch(err => {
+    console.warn("Could not load WRS grid", err);
+  });
+
+function highlightWrsSelection(feature) {
+  wrsSelection.clearLayers();
+  if (feature) {
+    wrsSelection.addData(feature);
+  }
+}
+
+function applyWrsSelection(feature) {
+  const path = propsPath(feature);
+  const row = propsRow(feature);
+
+  const pathInput = document.getElementById("apiPath");
+  const rowInput = document.getElementById("apiRow");
+  if (pathInput && path != null) pathInput.value = path;
+  if (rowInput && row != null) rowInput.value = row;
+
+  if (tileInfoDiv && path != null && row != null) {
+    tileInfoDiv.innerHTML = `
+      <p><strong>Selected path/row:</strong> ${String(path).padStart(3, "0")}/${String(row).padStart(3, "0")}</p>
+      <p class="muted">Click “Run analysis” to fetch delta NBR for these dates.</p>
+    `;
+  }
+}
+
+function chooseFeature(feature) {
+  highlightWrsSelection(feature);
+  applyWrsSelection(feature);
+}
+
+// Also allow map clicks: pick the containing feature whose centroid is closest
+map.on('click', e => {
+  if (Date.now() - lastFeatureClick < 50) return;
+  if (!wrsFeatures.length || typeof turf === "undefined") return;
+
+  const pt = turf.point([e.latlng.lng, e.latlng.lat]);
+  const hits = wrsFeatures.filter(f => turf.booleanPointInPolygon(pt, f));
+  if (!hits.length) return;
+
+  const chosen = hits.slice().sort((a, b) => {
+    const da = turf.distance(pt, turf.centroid(a));
+    const db = turf.distance(pt, turf.centroid(b));
+    return da - db;
+  })[0];
+
+  chooseFeature(chosen);
+});
 
 // --- Custom analysis (API) wiring ---
 

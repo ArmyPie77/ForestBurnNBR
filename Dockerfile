@@ -18,4 +18,5 @@ COPY . .
 
 ENV PORT=5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:${PORT}", "--timeout", "600", "api_server:app"]
+# Use shell form so $PORT is expanded by the shell (Render sets PORT)
+CMD ["/bin/sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} --timeout 600 api_server:app"]

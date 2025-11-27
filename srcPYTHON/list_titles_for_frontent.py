@@ -12,7 +12,8 @@ BATCH_DIR = os.path.join(OUTPUT_DIR, "batch_tiles")
 # Matches:
 # delta_nbr_P017R023_20220919_20231016.tif
 FNAME_RE = re.compile(
-    r"^delta_nbr_P(?P<path>\d{3})R(?P<row>\d{3})_(?P<pre>\d{8})_(?P<post>\d{8})\.tif$"
+    r"^delta_nbr_p(?P<path>\d{3})r(?P<row>\d{3})_(?P<pre>\d{8})_(?P<post>\d{8})\.tif$",
+    re.IGNORECASE,
 )
 
 tiles = []
@@ -46,6 +47,9 @@ for fname in sorted(os.listdir(BATCH_DIR)):
         data = np.where(data == nodata, np.nan, data)
 
     stats = delta_nbr_stats(data)  # uses threshold=0.27 unless you change it
+    percent = stats.get("percent_changed")
+    if percent is None or not np.isfinite(percent):
+        percent = None  # avoid NaN in the UI
 
     # bounds: (min_lat, min_lon, max_lat, max_lon)
     min_lat, min_lon, max_lat, max_lon = get_latlon_bounds(profile)
@@ -61,7 +65,7 @@ for fname in sorted(os.listdir(BATCH_DIR)):
         "bounds": bounds,
         "preDate": f"{pre_date[:4]}-{pre_date[4:6]}-{pre_date[6:]}",
         "postDate": f"{post_date[:4]}-{post_date[4:6]}-{post_date[6:]}",
-        "percentChanged": stats["percent_changed"],
+        "percentChanged": percent,
     })
 
 print("const PRESET_TILES = ")

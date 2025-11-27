@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quebec Forest Fire Burn Viewer · Map</title>
+  <title>Quebec Burn Scar Explorer · Map</title>
   <link rel="stylesheet" href="css/styles.css" />
   <meta name="description" content="Visualize post-fire burn severity across Quebec using Landsat-derived delta NBR imagery.">
   <link rel="preconnect" href="https://unpkg.com">
@@ -14,7 +14,7 @@
 
   <header class="site-header">
     <div class="container">
-      <h1 class="logo"><a href="index.html" aria-label="Home">Quebec Forest Fire Burn Viewer</a></h1>
+      <h1 class="logo"><a href="index.html" aria-label="Home">Quebec Burn Scar Explorer</a></h1>
       <nav aria-label="Primary">
         <ul class="nav">
           <li><a href="index.html">Home</a></li>
@@ -24,30 +24,58 @@
     </div>
   </header>
 
-  <main id="main" class="container">
+  <main id="main" class="container map-page">
     <section>
-      <h2>Interactive Map</h2>
-      <p>
-        View burn severity across Quebec. Use the controls on the right to
-        toggle pre-generated fire tiles and (later) run custom analyses. 
-      </p>
 
       <div class="map-layout">
         <div class="map-panel">
           <div id="map" class="map" role="application"
               aria-label="Interactive map of Quebec fire burn areas"></div>
+          <div id="loadingOverlay" class="loading hidden">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading…</div>
+          </div>
         </div>
 
         <aside class="controls" aria-label="Map controls">
+          <div class="controls-header">
+            <h2 class="controls-title">Interactive Map</h2>
+            <p class="controls-subtitle">
+              View burn severity across Quebec. Toggle pre-generated tiles or run your own analysis.
+            </p>
+          </div>
+
           <h3>Layers</h3>
           <label class="control-item">
-            <input type="checkbox" id="chkPresetTiles" checked>
-            Show pre-generated 2022–2023 burn tiles
+            <input type="checkbox" id="chkStrip">
+            2022–2023 burn tiles
+          </label>
+          <label class="control-item">
+            <input type="checkbox" id="chkAddons" checked>
+            2022–2023 add-ons (new batch)
+          </label>
+          <label class="control-item">
+            <input type="checkbox" id="chkTest">
+            2017–2018 test tiles
+          </label>
+          <label class="control-item">
+            <input type="checkbox" id="chkGrid" checked>
+            Show WRS grid
           </label>
 
           <h3>Tile info</h3>
           <div id="tileInfo" class="info-box">
             <p>Click a yellow tile outline on the map to see its details.</p>
+          </div>
+          <div id="selectedList" class="info-box">
+            <p><strong>Selected tiles:</strong> (none)</p>
+          </div>
+
+          <div class="info-box how-to">
+            <p><strong>How to use:</strong></p>
+            <p>1) Toggle seasons you want visible.</p>
+            <p>2) Click tiles (shift-click for multiple) to fill path/row.</p>
+            <p>3) Set dates and run analysis. It can be slow.</p>
           </div>
 
           <h3>Custom analysis (API)</h3>
@@ -69,28 +97,28 @@
           <div class="control-item">
             <label>
               Pre-fire start
-              <input type="date" id="preStart">
+              <input type="date" id="preStart" autocomplete="off">
             </label>
           </div>
 
           <div class="control-item">
             <label>
               Pre-fire end
-              <input type="date" id="preEnd">
+              <input type="date" id="preEnd" autocomplete="off">
             </label>
           </div>
 
           <div class="control-item">
             <label>
               Post-fire start
-              <input type="date" id="postStart">
+              <input type="date" id="postStart" autocomplete="off">
             </label>
           </div>
 
           <div class="control-item">
             <label>
               Post-fire end
-              <input type="date" id="postEnd">
+              <input type="date" id="postEnd" autocomplete="off">
             </label>
           </div>
 

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: quebec-burn-scar-explorer
+    env: docker
+    plan: free
+    autoDeploy: false
+    envVars:
+      - key: USGS_USERNAME
+        sync: false
+      - key: USGS_TOKEN
+        sync: false

@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quebec Forest Fire Burn Viewer · Map</title>
+  <title>Quebec Burn Scar Explorer</title>
   <link rel="stylesheet" href="css/styles.css" />
   <meta name="description" content="MVP for forest fire stuff">
   <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header">
     <div class="container">
-      <h1 class="logo"><a href="index.html" aria-label="Home">Quebec Forest Fire Burn Viewer</a></h1>
+      <h1 class="logo"><a href="index.html" aria-label="Home">Quebec Burn Scar Explorer</a></h1>
       <nav aria-label="Primary">
         <ul class="nav">
           <li><a class="active" href="index.html">Home</a></li>
@@ -25,15 +28,69 @@
     
   <main id="main" class="container">
     <section class="hero">
-      <h2>Welcome to the Quebec Forest Fire Burn Viewer</h2>
-      <p>This tool visualizes post-fire burn severity across Quebec using Landsat-derived delta NBR imagery.</p>
-      <a class="button" href="map.html">Open the Map</a>
+      <div class="hero-copy">
+        <span class="badge badge-solid">Quebec Burn Scar Explorer</span>
+        <p class="lead">Ready-made overlays of dNBR results from historic Quebec forest fires, plus a quick guide to running your own dNBR requests from Landsat.</p>
+        <div class="cta-row">
+          <a class="button" href="map.html">Open the Map</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="include-strip" aria-label="What’s included">
+      <div class="include-item">Preloaded dNBR tiles across Quebec</div>
+      <div class="include-item">API for custom path/row + date analysis</div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="how-step">
+        <p class="badge">1</p>
+        <h3>Pick path/row & dates</h3>
+        <p class="muted">On the map, use the sidebar or click a tile outline to auto-fill path/row.</p>
+      </div>
+      <div class="how-step">
+        <p class="badge">2</p>
+        <h3>Fetch Landsat scenes</h3>
+        <p class="muted">The API pulls the least-cloudy surface reflectance scenes in your window.</p>
+      </div>
+      <div class="how-step">
+        <p class="badge">3</p>
+        <h3>See burn severity</h3>
+        <p class="muted">dNBR is computed, written to GeoTIFF, and a georeferenced PNG overlay is served.</p>
+      </div>
+      <div class="how-step tips-card" id="custom-analysis">
+        <p class="badge">Tips</p>
+        <ul class="tips-list">
+          <li>Start with preloaded tiles for speed.</li>
+          <li>Widen date ranges during cloudy seasons.</li>
+          <li>API runs can take several minutes.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <div class="info-card">
+        <h3>Landsat</h3>
+        <p>30 m multispectral imagery with deep archives and frequent revisits—ideal for before/after fire views.</p>
+      </div>
+      <div class="info-card">
+        <h3>dNBR</h3>
+        <p>dNBR compares pre- and post-fire NBR to reveal burn severity. Values above ~0.27 often flag notable change.</p>
+      </div>
+      <div class="info-card">
+        <h3>Preloaded tiles</h3>
+        <p>Preloaded burn tiles cover key seasons across Quebec and load quickly as georeferenced PNG overlays. Use the sidebar toggles to explore each season without waiting for processing.</p>
+      </div>
+      <div class="info-card">
+        <h3>API analysis</h3>
+        <p>The API pulls surface reflectance scenes for your path/row and dates, computes dNBR, and serves a web overlay. Wider date ranges help dodge clouds.</p>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p>© 2025 Quebec Forest Fire MVP — Built with Leaflet for GEOG 464.</p>
+      <p>© 2025 Quebec Burn Scar Explorer — Built with Leaflet for GEOG 464.</p>
     </div>
   </footer>
 </body>

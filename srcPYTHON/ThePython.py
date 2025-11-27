@@ -25,7 +25,8 @@ os.makedirs(EXTRACT_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 DELTA_NBR_THRESHOLD = 0.1
-MAX_CLOUD_COVER = 15
+BURN_VIS_THRESHOLD = 0.15  # pixels below this are transparent in the web PNG
+MAX_CLOUD_COVER = 25
 
 
 
@@ -119,8 +120,16 @@ def compute_delta_nbr(nbr_pre, nbr_post):
 #this one calculates the stats of change from deltaNBR 
 def delta_nbr_stats(delta, threshold=0.27): #0.27 is the deltanbr threshold i will use to determain if a bit of land has been sufficiantly destroyed for me to concider it to be burnt
     valid = ~np.isnan(delta)
+    valid_count = np.count_nonzero(valid)
+    if valid_count == 0:
+        return {
+            'valid_pixels': 0,
+            'changed_pixels': 0,
+            'percent_changed': 0.0
+        }
+
     changed = (delta >= threshold) & valid
-    percent_changed = np.nansum(changed) / np.count_nonzero(valid) * 100
+    percent_changed = np.nansum(changed) / valid_count * 100
     return {
         'valid_pixels': int(np.count_nonzero(valid)),
         'changed_pixels': int(np.count_nonzero(changed)),
@@ -274,7 +283,7 @@ def m2m_login(username, app_token):
 
 
 
-def m2m_search(api_key, bbox, start, end):
+def m2m_search(api_key, bbox, start, end, max_cloud=None):
     """
     Scene-search for landsat_ot_c2_l2 over an MBR bbox and date range.
     bbox = (min_lon, min_lat, max_lon, max_lat)
@@ -295,18 +304,23 @@ def m2m_search(api_key, bbox, start, end):
         "end": end,
     }
 
-    # Optional cloud filter using your global MAX_CLOUD_COVER
-    cloud_cover_filter = {
-        "min": 0,
-        "max": MAX_CLOUD_COVER,
-        "includeUnknown": False,
-    }
+    # Optional cloud filter
+    cloud_cover_filter = None
+    if max_cloud is None:
+        max_cloud = MAX_CLOUD_COVER
+    if max_cloud is not None:
+        cloud_cover_filter = {
+            "min": 0,
+            "max": max_cloud,
+            "includeUnknown": False,
+        }
 
     scene_filter = {
         "spatialFilter": spatial_filter,
         "acquisitionFilter": acquisition_filter,
-        "cloudCoverFilter": cloud_cover_filter,
     }
+    if cloud_cover_filter:
+        scene_filter["cloudCoverFilter"] = cloud_cover_filter
 
     payload = {
         "datasetName": "landsat_ot_c2_l2",
@@ -780,8 +794,11 @@ def download_landsat_period(api_key, start_date, end_date, path, row):
         print(f"Filtered to {len(exact_scenes)} scenes with WRS {path:03d}/{row:03d}")
         scenes = exact_scenes
     else:
-        print("WARNING: no scenes matched exact WRS path/row in metadata.")
-        print("         Using all scenes returned for the bbox (may include neighbors).")
+        raise Exception(
+            f"No scenes matched exact WRS path/row {path:03d}/{row:03d} "
+            f"between {start_date} and {end_date}. "
+            "Try adjusting the date range."
+        )
 
     # ---- Prefer the least cloudy scene ----
     def scene_cloud(s):
@@ -976,7 +993,8 @@ def run_delta_nbr_pipeline(
     api_key,
     pre_start, pre_end,
     post_start, post_end,
-    path, row
+    path, row,
+    tag=None
 ):
     """
     Core function: given dates + WRS-2 path/row, run the whole pipeline
@@ -992,7 +1010,10 @@ def run_delta_nbr_pipeline(
         pre_bands["qa"],  post_bands["qa"]
     )
 
-    out_tif = os.path.join(OUTPUT_DIR, "delta_nbr_float32_nd.tif")
+    safe_tag = str(tag).replace(" ", "_") if tag else "web"
+    out_base = f"delta_nbr_{safe_tag}"
+
+    out_tif = os.path.join(OUTPUT_DIR, f"{out_base}.tif")
     out_profile.update({
         "driver": "GTiff",
         "dtype": "float32",
@@ -1008,8 +1029,9 @@ def run_delta_nbr_pipeline(
     with rasterio.open(out_tif, "w", **out_profile) as dst:
         dst.write(delta_to_write, 1)
 
-    out_png = os.path.join(OUTPUT_DIR, "delta_nbr_web.png")
-    export_png_from_tif(out_tif, out_png)
+    out_png = os.path.join(OUTPUT_DIR, f"{out_base}.png")
+    # Only show burned pixels; anything below threshold is fully transparent
+    export_burn_png_from_delta(out_tif, out_png, threshold=BURN_VIS_THRESHOLD)
 
     bounds = get_latlon_bounds(out_profile)
 
@@ -1022,10 +1044,6 @@ def run_delta_nbr_pipeline(
         "bounds": bounds,          # (min_lat, min_lon, max_lat, max_lon)
         "stats": stats
     }
-
-
-
-
 
 
 

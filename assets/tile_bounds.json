@@ -1,0 +1,228 @@
+{
+  "tiles": [
+    {
+      "id": "P017R015",
+      "url": "assets/batch_tiles/delta_nbr_P017R015.png",
+      "bounds": [
+        [
+          7399515.0,
+          428985.0
+        ],
+        [
+          7148385.0,
+          678315.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R016",
+      "url": "assets/batch_tiles/delta_nbr_P017R016.png",
+      "bounds": [
+        [
+          7099215.0,
+          231885.0
+        ],
+        [
+          6844785.0,
+          484815.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R017",
+      "url": "assets/batch_tiles/delta_nbr_P017R017.png",
+      "bounds": [
+        [
+          7099215.0,
+          231885.0
+        ],
+        [
+          6844785.0,
+          484815.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R018",
+      "url": "assets/batch_tiles/delta_nbr_P017R018.png",
+      "bounds": [
+        [
+          6939315.0,
+          495885.0
+        ],
+        [
+          6695385.0,
+          738015.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R019",
+      "url": "assets/batch_tiles/delta_nbr_P017R019.png",
+      "bounds": [
+        [
+          6784215.0,
+          447285.0
+        ],
+        [
+          6539685.0,
+          689715.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R020",
+      "url": "assets/batch_tiles/delta_nbr_P017R020.png",
+      "bounds": [
+        [
+          6629115.0,
+          398085.0
+        ],
+        [
+          6384285.0,
+          640815.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R021",
+      "url": "assets/batch_tiles/delta_nbr_P017R021.png",
+      "bounds": [
+        [
+          6474015.0,
+          348585.0
+        ],
+        [
+          6228885.0,
+          591615.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R022",
+      "url": "assets/batch_tiles/delta_nbr_P017R022.png",
+      "bounds": [
+        [
+          6163815.0,
+          261285.0
+        ],
+        [
+          5918385.0,
+          504315.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R023",
+      "url": "assets/batch_tiles/delta_nbr_P017R023.png",
+      "bounds": [
+        [
+          6009015.0,
+          210885.0
+        ],
+        [
+          5763285.0,
+          454215.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R024",
+      "url": "assets/batch_tiles/delta_nbr_P017R024.png",
+      "bounds": [
+        [
+          5846715.0,
+          360585.0
+        ],
+        [
+          5606085.0,
+          599115.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R025",
+      "url": "assets/batch_tiles/delta_nbr_P017R025.png",
+      "bounds": [
+        [
+          5690415.0,
+          315585.0
+        ],
+        [
+          5449185.0,
+          554415.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R026",
+      "url": "assets/batch_tiles/delta_nbr_P017R026.png",
+      "bounds": [
+        [
+          5533815.0,
+          270285.0
+        ],
+        [
+          5292285.0,
+          509415.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R027",
+      "url": "assets/batch_tiles/delta_nbr_P017R027.png",
+      "bounds": [
+        [
+          5377515.0,
+          224685.0
+        ],
+        [
+          5135685.0,
+          464115.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R028",
+      "url": "assets/batch_tiles/delta_nbr_P017R028.png",
+      "bounds": [
+        [
+          5377515.0,
+          224685.0
+        ],
+        [
+          5135685.0,
+          464115.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R029",
+      "url": "assets/batch_tiles/delta_nbr_P017R029.png",
+      "bounds": [
+        [
+          4899915.0,
+          578985.0
+        ],
+        [
+          4667085.0,
+          808515.0
+        ]
+      ]
+    },
+    {
+      "id": "P017R030",
+      "url": "assets/batch_tiles/delta_nbr_P017R030.png",
+      "bounds": [
+        [
+          4899915.0,
+          578985.0
+        ],
+        [
+          4667085.0,
+          808515.0
+        ]
+      ]
+    }
+  ]
+}

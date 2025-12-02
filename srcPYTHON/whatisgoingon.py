@@ -69,7 +69,7 @@ def run_batch(make_png=False, make_rgba=True):
 
             # 2) run delta NBR pipeline
             try:
-                nbr_pre, nbr_post, delta, out_profile = process_landsat(
+                delta, out_profile = process_landsat(
                     pre_bands["nir"], pre_bands["swir"],
                     post_bands["nir"], post_bands["swir"],
                     pre_bands["qa"],  post_bands["qa"],

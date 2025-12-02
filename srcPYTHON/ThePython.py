@@ -15,6 +15,7 @@ import json
 from rasterio.transform import array_bounds
 import time
 from rasterio.transform import xy
+import gc
 
 BASE_DIR = os.path.join(os.getcwd(), "data")  
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "dataAPI")
@@ -773,6 +774,9 @@ def export_burn_rgba_geotiff_from_delta(tif_path, out_tif_path, threshold=DELTA_
 
     burned = (data >= threshold) & np.isfinite(data)
 
+    h, w = data.shape
+    rgba_uint8 = np.zeros((4, h, w), dtype=np.uint8)
+
     if np.any(burned):
         vmin = threshold
         vmax = np.nanpercentile(data[burned], 99)
@@ -782,18 +786,12 @@ def export_burn_rgba_geotiff_from_delta(tif_path, out_tif_path, threshold=DELTA_
         norm = Normalize(vmin=vmin, vmax=vmax, clip=True)
         cmap = cm.get_cmap("inferno")
 
-        h, w = data.shape
-        rgba = np.zeros((h, w, 4), dtype=np.float32)
-        normed_vals = norm(data[burned])
-        colors = cmap(normed_vals)  # RGBA floats 0–1
-        rgba[burned] = colors
-        rgba[burned, 3] = 1.0  # opaque where burned
-    else:
-        h, w = data.shape
-        rgba = np.zeros((h, w, 4), dtype=np.float32)
+        rows, cols = np.where(burned)
+        colors = (np.clip(cmap(norm(data[burned])), 0, 1) * 255).astype(np.uint8)
 
-    rgba_uint8 = (np.clip(rgba, 0, 1) * 255).astype(np.uint8)
-    rgba_uint8 = np.transpose(rgba_uint8, (2, 0, 1))  # (4, H, W)
+        for i in range(4):
+            rgba_uint8[i, rows, cols] = colors[:, i]
+        rgba_uint8[3, rows, cols] = 255  # force alpha to opaque where burned
 
     profile.update({
         "driver": "GTiff",
@@ -1008,7 +1006,7 @@ def run_dnbr_job(fire_id, pre_start, pre_end, post_start, post_end, path, row, a
     pre_bands = download_landsat_period(api_key, pre_start, pre_end, path, row)
     post_bands = download_landsat_period(api_key, post_start, post_end, path, row)
 
-    nbr_pre, nbr_post, delta, out_profile = process_landsat(
+    delta, out_profile = process_landsat(
         pre_bands["nir"], pre_bands["swir"],
         post_bands["nir"], post_bands["swir"],
         pre_bands["qa"],  post_bands["qa"]
@@ -1081,7 +1079,7 @@ def run_delta_nbr_pipeline(
     pre_bands = download_landsat_period(api_key, pre_start, pre_end, path, row)
     post_bands = download_landsat_period(api_key, post_start, post_end, path, row)
 
-    nbr_pre, nbr_post, delta, out_profile = process_landsat(
+    delta, out_profile = process_landsat(
         pre_bands["nir"], pre_bands["swir"],
         post_bands["nir"], post_bands["swir"],
         pre_bands["qa"],  post_bands["qa"]
@@ -1231,7 +1229,7 @@ def get_latlon_bounds(profile):
 #------------------below i do my functions , most of them being inside a mega function: process landsat--------------------------------------------------
 
 def process_landsat(pre_nir_path, pre_swir_path, post_nir_path, post_swir_path, qa_pre_path, qa_post_path):
-    """End-to-end Landsat processing: load bands, align, mask clouds, compute NBR and delta."""
+    """End-to-end Landsat processing: load bands, align, mask clouds, compute delta NBR."""
 
     #these are the loadband and load cloud mask functions
     nir_pre, pre_profile = load_band(pre_nir_path)
@@ -1268,10 +1266,14 @@ def process_landsat(pre_nir_path, pre_swir_path, post_nir_path, post_swir_path, 
     #delta nbr
     delta = compute_delta_nbr(nbr_pre, nbr_post)
 
-    #compute stats
-    stats = delta_nbr_stats(delta)
-    print(stats)
-    return nbr_pre, nbr_post, delta, pre_profile
+    # free large intermediates before returning
+    del nir_pre, swir_pre, nir_post, swir_post
+    del nir_post_aligned, swir_post_aligned
+    del mask_pre, mask_post, mask_post_aligned, mask_both
+    del nbr_pre, nbr_post
+    gc.collect()
+
+    return delta, pre_profile
 
 
 
@@ -1300,7 +1302,7 @@ if __name__ == "__main__":
     pre_bands = download_landsat_period(api_key, pre_start, pre_end, path, row)
     post_bands = download_landsat_period(api_key, post_start, post_end, path, row)
 
-    nbr_pre, nbr_post, delta, out_profile = process_landsat(
+    delta, out_profile = process_landsat(
         pre_bands["nir"], pre_bands["swir"],
         post_bands["nir"], post_bands["swir"],
         pre_bands["qa"],  post_bands["qa"]

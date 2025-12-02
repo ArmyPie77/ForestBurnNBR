@@ -47,20 +47,16 @@
 
           <h3>Layers</h3>
           <label class="control-item">
-            <input type="checkbox" id="chkStrip">
-            2022–2023 burn tiles
+            <input type="checkbox" id="chkXYZ" checked>
+            Pre-Made 2023 Quebec burn scars
           </label>
           <label class="control-item">
-            <input type="checkbox" id="chkAddons" checked>
-            2022–2023 add-ons (new batch)
-          </label>
-          <label class="control-item">
-            <input type="checkbox" id="chkTest">
-            2017–2018 test tiles
-          </label>
-          <label class="control-item">
-            <input type="checkbox" id="chkGrid" checked>
+            <input type="checkbox" id="chkGrid">
             Show WRS grid
+          </label>
+          <label class="control-item">
+            <input type="checkbox" id="chkOutlines">
+            Show tile outlines
           </label>
 
           <h3>Tile info</h3>
@@ -73,7 +69,7 @@
 
           <div class="info-box how-to">
             <p><strong>How to use:</strong></p>
-            <p>1) Toggle seasons you want visible.</p>
+            <p>1) Toggle XYZ layer if you want it visible.</p>
             <p>2) Click tiles (shift-click for multiple) to fill path/row.</p>
             <p>3) Set dates and run analysis. It can be slow.</p>
           </div>
@@ -160,7 +156,7 @@
       crossorigin=""
     ></script>
     <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
-
+    <script src="tiles_snippet.js"></script>
     <script src="js/map.js"></script>
   </main>
 

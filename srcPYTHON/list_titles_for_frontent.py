@@ -4,10 +4,14 @@ import re
 import json
 import numpy as np
 import rasterio
+from pathlib import Path
 
 from ThePython import OUTPUT_DIR, get_latlon_bounds, delta_nbr_stats
 
 BATCH_DIR = os.path.join(OUTPUT_DIR, "batch_tiles")
+REPO_ROOT = Path(__file__).resolve().parent.parent
+XYZ_DIR = REPO_ROOT / "assets" / "xyz"
+XYZ_MANIFEST = XYZ_DIR / "tiles_manifest.json"
 
 # Matches:
 # delta_nbr_P017R023_20220919_20231016.tif
@@ -17,6 +21,26 @@ FNAME_RE = re.compile(
 )
 
 tiles = []
+
+
+def load_xyz_manifest():
+    if not XYZ_MANIFEST.exists():
+        return {}
+    try:
+        data = json.loads(XYZ_MANIFEST.read_text())
+    except Exception as e:
+        print("Could not read XYZ manifest, continuing without it:", e)
+        return {}
+
+    lookup = {}
+    for entry in data:
+        tid = entry.get("id")
+        if tid:
+            lookup[tid] = entry
+    return lookup
+
+
+xyz_lookup = load_xyz_manifest()
 
 for fname in sorted(os.listdir(BATCH_DIR)):
     if not fname.lower().endswith(".tif"):
@@ -58,7 +82,7 @@ for fname in sorted(os.listdir(BATCH_DIR)):
     tile_id = f"P{path:03d}R{row:03d}_{pre_date}_{post_date}"
     label = f"Path {path:03d} Row {row:03d} ({pre_date} vs {post_date})"
 
-    tiles.append({
+    tile_entry = {
         "id": tile_id,
         "label": label,
         "url": png_url,
@@ -66,7 +90,17 @@ for fname in sorted(os.listdir(BATCH_DIR)):
         "preDate": f"{pre_date[:4]}-{pre_date[4:6]}-{pre_date[6:]}",
         "postDate": f"{post_date[:4]}-{post_date[4:6]}-{post_date[6:]}",
         "percentChanged": percent,
-    })
+    }
+
+    xyz_meta = xyz_lookup.get(tile_id)
+    if xyz_meta:
+        tile_entry["tileUrl"] = xyz_meta.get("tileUrl")
+        if xyz_meta.get("minZoom") is not None:
+            tile_entry["minZoom"] = xyz_meta["minZoom"]
+        if xyz_meta.get("maxZoom") is not None:
+            tile_entry["maxZoom"] = xyz_meta["maxZoom"]
+
+    tiles.append(tile_entry)
 
 print("const PRESET_TILES = ")
 print(json.dumps(tiles, indent=2))

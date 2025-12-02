@@ -1,3 +1,93 @@
+Skipping unrecognized filename: delta_nbr_p010r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r023_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p010r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r019_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r021_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p011r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r019_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r021_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r022_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r023_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r024_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r025_20230501_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p012r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r019_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r022_20230501_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r027_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r028_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p013r029_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r019_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r020_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r021_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r022_20230501_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r027_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r028_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p014r029_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r019_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r021_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r022_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r024_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p015r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r019_20230501_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r020_20230501_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r021_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p016r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r019_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r020_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r022_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p017r026_20230501_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r019_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p018r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r019_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p019r026_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r019_20220715_20240501_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r020_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r021_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r022_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r023_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r024_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r025_20220715_20230901_rgba.tif
+Skipping unrecognized filename: delta_nbr_p020r026_20220715_20230901_rgba.tif
 const PRESET_TILES = 
 [
   {
@@ -52,7 +142,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-21",
     "postDate": "2023-09-24",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R018_20220613_20230921",
@@ -70,7 +160,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-13",
     "postDate": "2023-09-21",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R019_20220613_20230929",
@@ -88,7 +178,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-13",
     "postDate": "2023-09-29",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R020_20220613_20230929",
@@ -106,7 +196,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-13",
     "postDate": "2023-09-29",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R021_20220613_20230929",
@@ -142,7 +232,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-01",
     "postDate": "2023-10-15",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R023_20220601_20231016",
@@ -160,7 +250,7 @@ const PRESET_TILES =
     ],
     "preDate": "2022-06-01",
     "postDate": "2023-10-16",
-    "percentChanged": NaN
+    "percentChanged": 0.0
   },
   {
     "id": "P017R024_20220623_20231016",
@@ -287,6 +377,78 @@ const PRESET_TILES =
     "preDate": "2022-06-23",
     "postDate": "2023-09-22",
     "percentChanged": 0.5065433787595666
+  },
+  {
+    "id": "P015R025_20220715_20230901",
+    "label": "Path 015 Row 025 (20220715 vs 20230901)",
+    "url": "assets/batch_tiles/delta_nbr_P015R025.png",
+    "bounds": [
+      [
+        49.234577957006906,
+        -74.43837933751148
+      ],
+      [
+        51.29105460751917,
+        -71.0739584724096
+      ]
+    ],
+    "preDate": "2022-07-15",
+    "postDate": "2023-09-01",
+    "percentChanged": 0.37476667287530907
+  },
+  {
+    "id": "P015R026_20220715_20230901",
+    "label": "Path 015 Row 026 (20220715 vs 20230901)",
+    "url": "assets/batch_tiles/delta_nbr_P015R026.png",
+    "bounds": [
+      [
+        47.81091525134761,
+        -74.97081517578542
+      ],
+      [
+        49.8888000219215,
+        -71.72380131049442
+      ]
+    ],
+    "preDate": "2022-07-15",
+    "postDate": "2023-09-01",
+    "percentChanged": 0.03619493494843399
+  },
+  {
+    "id": "P016R023_20220715_20230901",
+    "label": "Path 016 Row 023 (20220715 vs 20230901)",
+    "url": "assets/batch_tiles/delta_nbr_P016R023.png",
+    "bounds": [
+      [
+        52.04436334124006,
+        -74.83691208027719
+      ],
+      [
+        54.12164780295728,
+        -71.23352298129514
+      ]
+    ],
+    "preDate": "2022-07-15",
+    "postDate": "2023-09-01",
+    "percentChanged": 3.781955986122586
+  },
+  {
+    "id": "P018R023_20220715_20230901",
+    "label": "Path 018 Row 023 (20220715 vs 20230901)",
+    "url": "assets/batch_tiles/delta_nbr_P018R023.png",
+    "bounds": [
+      [
+        51.97478799531794,
+        -77.85539498072897
+      ],
+      [
+        54.194814135121064,
+        -74.3131023474264
+      ]
+    ],
+    "preDate": "2022-07-15",
+    "postDate": "2023-09-01",
+    "percentChanged": 9.227399722664932
   }
 ]
 ;

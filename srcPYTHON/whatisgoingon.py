@@ -10,6 +10,7 @@ from ThePython import (
     export_png_from_tif,
     OUTPUT_DIR,
     export_burn_png_from_delta,
+    export_burn_rgba_geotiff_from_delta,
 )
 
 
@@ -37,7 +38,7 @@ POST_END   = "2023-10-17"
 USERNAME = "Matt2icy"
 APP_TOKEN = "cir0gHyF3eH89ARS4sI9sFcQT_31qZg@B1hhIby!D3@tF@S7kuT3TzLc1SroNjb8"
 
-def run_batch():
+def run_batch(make_png=False, make_rgba=True):
     api_key = m2m_login(USERNAME, APP_TOKEN)
 
     # put all batch PNGs/TIFs in one subfolder
@@ -100,13 +101,19 @@ def run_batch():
 
             print("  Wrote TIF:", tif_path)
 
-            # 4) export PNG for web
             # 4) export PNG for web (burn-only, transparent background)
-            png_name = f"delta_nbr_P{path:03d}R{row:03d}.png"
-            png_path = os.path.join(batch_dir, png_name)
+            if make_png:
+                png_name = f"delta_nbr_P{path:03d}R{row:03d}.png"
+                png_path = os.path.join(batch_dir, png_name)
+                export_burn_png_from_delta(tif_path, png_path)
+                print("  Wrote burn-only PNG:", png_path)
 
-            export_burn_png_from_delta(tif_path, png_path)
-            print("  Wrote burn-only PNG:", png_path)
+            # 5) write RGBA GeoTIFF for XYZ tiling (same look as PNG)
+            if make_rgba:
+                rgba_name = f"delta_nbr_P{path:03d}R{row:03d}_rgba.tif"
+                rgba_path = os.path.join(batch_dir, rgba_name)
+                export_burn_rgba_geotiff_from_delta(tif_path, rgba_path)
+                print("  Wrote burn-only RGBA GeoTIFF:", rgba_path)
 
 
     m2m_logout(api_key)

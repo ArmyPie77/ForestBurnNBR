@@ -32,7 +32,7 @@ MAX_CLOUD_COVER = 25
 
 #this code below is a function for loading the bands, it loads a single landsat .tif. band_path is the path to the .tif, 
 def load_band(band_path):
-    #Load a single band from a GeoTIFF
+    """Read a single-band GeoTIFF into a float32 numpy array and return (array, profile)."""
     with rasterio.open(band_path) as src:
         arr = src.read(1).astype('float32')
 
@@ -43,6 +43,7 @@ def load_band(band_path):
 
 #this is my load cloud/QA mask function, took me a while to realise that its not just 0 is cloud and 1 is clear skies, but instead theres a system of bits to represent differnet visual obstructions . QA is the cloud band stuff
 def load_cloud_mask(qa_path):
+    """Decode the Landsat QA band into a boolean mask where True=masked (cloud/snow/etc)."""
     with rasterio.open(qa_path) as src:
         qa = src.read(1)
 
@@ -68,6 +69,7 @@ def load_cloud_mask(qa_path):
 #ok now for raster alignment. it aligns the source to the target projection and location. i need rasterio
 
 def align_raster(source_arr, source_profile, target_profile):
+    """Reproject a numeric raster to match the grid/CRS of the target profile."""
     dst_arr = np.empty((target_profile['height'], target_profile['width']), dtype=np.float32) #making an empty array to hold the reprojected raster, size maatches target raster
     reproject(
         source=source_arr, #2d array of the raster i want to reporject (eg post fire NIR)
@@ -84,6 +86,7 @@ def align_raster(source_arr, source_profile, target_profile):
 
 #ok now to realign the masks which have been  done by aligning a boolean mask to a target raster using neareast neighbour resampling 
 def align_mask(mask_source, source_profile, target_profile):
+    """Reproject a boolean mask to the target grid using nearest neighbour to preserve 0/1."""
    
     dst_mask = np.empty((target_profile['height'], target_profile['width']), dtype=np.uint8)
     
@@ -102,6 +105,7 @@ def align_mask(mask_source, source_profile, target_profile):
 
 #ok now time to compute the NBR function
 def compute_nbr(nir, swir2, mask=None):
+    """Compute Normalized Burn Ratio; applies optional mask (True -> NaN)."""
     denom = nir + swir2
     with np.errstate(divide="ignore", invalid="ignore"):
         nbr = (nir - swir2) / denom
@@ -114,6 +118,7 @@ def compute_nbr(nir, swir2, mask=None):
 
 #now i calculate delta nbr (change)
 def compute_delta_nbr(nbr_pre, nbr_post):
+    """Difference between pre- and post-fire NBR."""
     return nbr_pre - nbr_post
 
 
@@ -249,7 +254,7 @@ WRS2_BBOX = {
 def wrs2_to_bbox(path, row):
     return WRS2_BBOX.get((path, row))
 
-# cir0gHyF3eH89ARS4sI9sFcQT_31qZg@B1hhIby!D3@tF@S7kuT3TzLc1SroNjb8
+# 
 
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable/"
@@ -325,7 +330,8 @@ def m2m_search(api_key, bbox, start, end, max_cloud=None):
     payload = {
         "datasetName": "landsat_ot_c2_l2",
         "sceneFilter": scene_filter,
-        "maxResults": 5,
+        # increase to avoid dropping valid scenes when filtering later
+        "maxResults": 50,
     }
 
     resp = requests.post(url, headers=headers, json=payload)
@@ -677,6 +683,7 @@ def _scene_path_row_from_metadata(scene):
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.colors import Normalize
+from rasterio.enums import ColorInterp
 
 # ... your existing code ...
 
@@ -746,6 +753,71 @@ def export_burn_png_from_delta(tif_path, png_path, threshold=DELTA_NBR_THRESHOLD
 
     print("Wrote burn-only PNG:", png_path)
     print("Wrote world file:", worldfile_path)
+
+
+def export_burn_rgba_geotiff_from_delta(tif_path, out_tif_path, threshold=DELTA_NBR_THRESHOLD):
+    """
+    Bake the burn-only visualization into an RGBA GeoTIFF so it can be tiled
+    (e.g., with gdal2tiles) without losing colours/alpha. Mirrors
+    export_burn_png_from_delta but writes four bands.
+    """
+    with rasterio.open(tif_path) as src:
+        data = src.read(1).astype("float32")
+        transform = src.transform
+        crs = src.crs
+        nodata = src.nodata
+        profile = src.profile
+
+    if nodata is not None:
+        data = np.where(data == nodata, np.nan, data)
+
+    burned = (data >= threshold) & np.isfinite(data)
+
+    if np.any(burned):
+        vmin = threshold
+        vmax = np.nanpercentile(data[burned], 99)
+        if vmin == vmax:
+            vmax = vmin + 0.01
+
+        norm = Normalize(vmin=vmin, vmax=vmax, clip=True)
+        cmap = cm.get_cmap("inferno")
+
+        h, w = data.shape
+        rgba = np.zeros((h, w, 4), dtype=np.float32)
+        normed_vals = norm(data[burned])
+        colors = cmap(normed_vals)  # RGBA floats 0–1
+        rgba[burned] = colors
+        rgba[burned, 3] = 1.0  # opaque where burned
+    else:
+        h, w = data.shape
+        rgba = np.zeros((h, w, 4), dtype=np.float32)
+
+    rgba_uint8 = (np.clip(rgba, 0, 1) * 255).astype(np.uint8)
+    rgba_uint8 = np.transpose(rgba_uint8, (2, 0, 1))  # (4, H, W)
+
+    profile.update({
+        "driver": "GTiff",
+        "dtype": "uint8",
+        "count": 4,
+        "nodata": None,
+        "photometric": "RGB",
+        "compress": "LZW",
+        "transform": transform,
+        "crs": crs,
+    })
+
+    with rasterio.open(out_tif_path, "w", **profile) as dst:
+        dst.write(rgba_uint8)
+        # Make sure band 4 is marked as alpha so downstream tools (gdal2tiles)
+        # honour transparency instead of baking black backgrounds.
+        dst.colorinterp = (
+            ColorInterp.red,
+            ColorInterp.green,
+            ColorInterp.blue,
+            ColorInterp.alpha,
+        )
+
+    print("Wrote burn-only RGBA GeoTIFF:", out_tif_path)
 
 
 
@@ -964,6 +1036,8 @@ def run_dnbr_job(fire_id, pre_start, pre_end, post_start, post_end, path, row, a
     # ---- write classified PNG using your USGS scale ----
     out_png = os.path.join(OUTPUT_DIR, f"{fire_id}_dnbr_usgs.png")
     export_dnbr_class_png(out_tif, out_png)   # the function we discussed earlier
+    out_rgba = os.path.join(OUTPUT_DIR, f"{fire_id}_dnbr_rgba.tif")
+    export_burn_rgba_geotiff_from_delta(out_tif, out_rgba, threshold=BURN_VIS_THRESHOLD)
 
     stats = delta_nbr_stats(delta)            # already returns % and can include area
     bounds = get_latlon_bounds(profile)
@@ -978,6 +1052,7 @@ def run_dnbr_job(fire_id, pre_start, pre_end, post_start, post_end, path, row, a
         "row": row,
         "tif_path": out_tif,
         "png_path": out_png,
+        "rgba_tif_path": out_rgba,
         "stats": stats,
         "bounds": {
             "min_lat": bounds[0],
@@ -994,7 +1069,9 @@ def run_delta_nbr_pipeline(
     pre_start, pre_end,
     post_start, post_end,
     path, row,
-    tag=None
+    tag=None,
+    make_png=True,
+    make_rgba=True
 ):
     """
     Core function: given dates + WRS-2 path/row, run the whole pipeline
@@ -1029,9 +1106,16 @@ def run_delta_nbr_pipeline(
     with rasterio.open(out_tif, "w", **out_profile) as dst:
         dst.write(delta_to_write, 1)
 
-    out_png = os.path.join(OUTPUT_DIR, f"{out_base}.png")
-    # Only show burned pixels; anything below threshold is fully transparent
-    export_burn_png_from_delta(out_tif, out_png, threshold=BURN_VIS_THRESHOLD)
+    out_png = None
+    if make_png:
+        out_png = os.path.join(OUTPUT_DIR, f"{out_base}.png")
+        # Only show burned pixels; anything below threshold is fully transparent
+        export_burn_png_from_delta(out_tif, out_png, threshold=BURN_VIS_THRESHOLD)
+
+    out_rgba = None
+    if make_rgba:
+        out_rgba = os.path.join(OUTPUT_DIR, f"{out_base}_rgba.tif")
+        export_burn_rgba_geotiff_from_delta(out_tif, out_rgba, threshold=BURN_VIS_THRESHOLD)
 
     bounds = get_latlon_bounds(out_profile)
 
@@ -1041,6 +1125,7 @@ def run_delta_nbr_pipeline(
     return {
         "tif_path": out_tif,
         "png_path": out_png,
+        "rgba_tif_path": out_rgba,
         "bounds": bounds,          # (min_lat, min_lon, max_lat, max_lon)
         "stats": stats
     }
@@ -1146,6 +1231,7 @@ def get_latlon_bounds(profile):
 #------------------below i do my functions , most of them being inside a mega function: process landsat--------------------------------------------------
 
 def process_landsat(pre_nir_path, pre_swir_path, post_nir_path, post_swir_path, qa_pre_path, qa_post_path):
+    """End-to-end Landsat processing: load bands, align, mask clouds, compute NBR and delta."""
 
     #these are the loadband and load cloud mask functions
     nir_pre, pre_profile = load_band(pre_nir_path)
